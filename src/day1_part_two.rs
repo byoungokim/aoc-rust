@@ -1,38 +1,22 @@
-use std::fs::File;
-use std::path::Path;
-use std::io::{self, BufRead};
+use std::fs;
 
 fn main() {
-    let path = Path::new("day1_part2.txt");
-    let display = path.display();
-    let file = match File::open(&path) {
-        Err(why) => panic!("couldn't open {}: {}", display, why),
-        Ok(file) => file,
-    };
-    let input_lines = io::BufReader::new(file).lines();
+    let contents = fs::read_to_string("day1_part2.txt").unwrap();
+    let lines: Vec<&str> = contents.lines().collect();
 
-    let mut values: Vec<i32> = Vec::new();
-    let mut visit = vec![false; 2021];
-    for line in input_lines {
-        match line {
-            Ok(line) => {
-                let value: i32 = line.parse().unwrap();
-                values.push(value);
-                visit[value as usize] = true;
-            },
-            Err(_) => {
-                panic!("");
+    let mut n_increments = 0_i32;
+    let mut previous = -1;
+    let mut current = 0;
+    for i in 0..lines.len() {
+        current += lines[i].parse::<i32>().unwrap();
+        if i>1 {
+            if previous != -1 && previous < current {
+                n_increments+=1;
             }
+            println!("{}: {} < {} => {}", i, previous, current, n_increments);
+            previous = current;
+            current-= lines[i-2].parse::<i32>().unwrap();
         }
     }
-
-    'outer: for i in 1..values.len()-1 {
-        for j in i+1..values.len() {
-            if values[i]+values[j] <= 2020 && visit[(2020-values[i]-values[j]) as usize] == true {
-                println!("{}", values[i]+values[j]);
-                println!("{}", values[i]*values[j]*(2020-values[i]-values[j]));
-                break 'outer;
-            }
-        }
-    }
+    println!("n_increments: {}", n_increments);
 }
