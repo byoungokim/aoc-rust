@@ -3,5 +3,5 @@
 version = 3
 
 [[package]]
-name = "aoc-rust"
+name = "day6_part_one"
 version = "0.1.0"
