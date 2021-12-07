@@ -11,9 +11,8 @@ fn main() -> io::Result<()> {
     let sequence: Vec<i32> = input.trim().split(',').map(|x| x.parse::<i32>().unwrap()).collect();
     let mut map = [0; 9];
     for num in sequence { map[num as usize]+=1; }
-    for i in 0..map.len() {
-        println!("n[{}]: {}", i, map[i]);
-    }
+
+    let mut sol_part1 = 0_i64;
     for i in 0..256 {
         let temp = map[0];
         for num in 0..8 {
@@ -21,12 +20,12 @@ fn main() -> io::Result<()> {
         }
         map[8] = temp;
         map[6] += temp;
-        println!("i: {}, {}", i, map[8]);
+
+        if i == 79 {
+            sol_part1 = map.iter().sum();
+        }
     }
-    let mut sum = 0_i64;
-    for num in 0..9 {
-        sum += map[num];
-    }
-    println!("len: {}", sum);
+    let sum: i64 = map.iter().sum();
+    println!("sol1: {}, sol2: {}", sol_part1, sum);
     Ok(())
 }
